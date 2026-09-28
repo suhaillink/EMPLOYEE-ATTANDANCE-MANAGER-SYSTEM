@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import * as api from '../utils/api';
 
 const AttendanceReport = () => {
@@ -21,9 +21,9 @@ const AttendanceReport = () => {
 
   useEffect(() => {
     fetchEmployees();
-  }, []);
+  }, [fetchEmployees]);
 
-  const fetchEmployees = async () => {
+  const fetchEmployees = useCallback(async () => {
     try {
       const data = await api.getEmployees();
       if (Array.isArray(data) && data.length > 0) {
@@ -46,7 +46,7 @@ const AttendanceReport = () => {
     } catch (err) {
       console.error('Failed to load employees:', err);
     }
-  };
+  }, []);
 
   const loadReport = async (empId, y, m) => {
     if (!empId) return;

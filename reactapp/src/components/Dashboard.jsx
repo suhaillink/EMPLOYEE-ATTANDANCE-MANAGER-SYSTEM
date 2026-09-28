@@ -60,7 +60,7 @@ const Dashboard = () => {
   const myTodayRecord = myReport?.dailyRecords?.find((r) => r.date === todayStr);
   const myStatusToday = myTodayRecord ? myTodayRecord.status : 'Not Checked In';
   const myInTime = myTodayRecord?.checkInTime || '—';
-  const myOutTime = myTodayRecord?.checkOutTime || '—';
+
   const myTotalWorkDays = myReport?.totalWorkDays || 0;
   const myTotalWorkHours = myReport?.totalWorkHours || 0;
 
