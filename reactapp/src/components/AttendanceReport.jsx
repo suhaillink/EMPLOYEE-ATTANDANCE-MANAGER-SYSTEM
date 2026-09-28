@@ -41,6 +41,7 @@ const AttendanceReport = () => {
         setReport(null);
       }
     } catch (err) {
+      console.error('Failed to fetch attendance report:', err);
       setError('Failed to fetch attendance report');
       setReport(null);
     } finally {
@@ -59,6 +60,7 @@ const AttendanceReport = () => {
           const firstId = data[0].employeeId || data[0].id || '';
 
           setSelectedEmployee(firstId);
+
           await loadReport(firstId, year, month);
         } else {
           const me = data.find(
@@ -73,6 +75,7 @@ const AttendanceReport = () => {
             : data[0].employeeId || data[0].id;
 
           setSelectedEmployee(empId);
+
           await loadReport(empId, year, month);
         }
       }
@@ -86,7 +89,10 @@ const AttendanceReport = () => {
   }, [fetchEmployees]);
 
   const handleGenerateReport = (e) => {
-    if (e && e.preventDefault) e.preventDefault();
+    if (e && e.preventDefault) {
+      e.preventDefault();
+    }
+
     loadReport(selectedEmployee, year, month);
   };
 
@@ -118,7 +124,7 @@ const AttendanceReport = () => {
 
     const csvContent =
       'data:text/csv;charset=utf-8,' +
-      [headers.join(','), ...rows.map((e) => e.join(','))].join('\n');
+      [headers.join(','), ...rows.map((row) => row.join(','))].join('\n');
 
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement('a');
@@ -130,6 +136,7 @@ const AttendanceReport = () => {
     }_${year}_${month}.csv`;
 
     link.setAttribute('download', fileName);
+
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -167,7 +174,10 @@ const AttendanceReport = () => {
         <form onSubmit={handleGenerateReport}>
           <div className="report-form-grid">
             <div className="form-group">
-              <label htmlFor="report-employee-select" className="form-label">
+              <label
+                htmlFor="report-employee-select"
+                className="form-label"
+              >
                 {isAdmin ? 'Select Employee' : 'Employee Profile'}
               </label>
 
@@ -346,7 +356,8 @@ const AttendanceReport = () => {
               )}
             </div>
 
-            {report.dailyRecords && report.dailyRecords.length > 0 ? (
+            {report.dailyRecords &&
+            report.dailyRecords.length > 0 ? (
               <div className="table-responsive">
                 <table className="table">
                   <thead>
